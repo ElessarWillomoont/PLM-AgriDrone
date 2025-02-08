@@ -5,7 +5,10 @@ import { useTeamStore } from "@/store/teamStore";
 
 export default function Team() {
   const { members, addMember, removeMember } = useTeamStore();
-  const [newMember, setNewMember] = useState("");
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [position, setPosition] = useState("");
+  const [location, setLocation] = useState("");
 
   return (
     <div className="flex flex-col h-full">
@@ -14,37 +17,67 @@ export default function Team() {
       {/* List of Members */}
       <ul className="flex-1 space-y-2 overflow-auto">
         {members.map((member) => (
-          <li key={member} className="flex justify-between items-center bg-gray-700 p-2 rounded">
-            <span>{member}</span>
-            <button
-              onClick={() => removeMember(member)}
-              className="bg-red-500 text-white px-2 py-1 rounded"
-            >
-              ✕
-            </button>
+          <li key={member.id} className="bg-gray-700 p-2 rounded">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="font-bold">{member.name}</p>
+                <p className="text-sm text-gray-300">{member.title}</p>
+                <p className="text-xs text-gray-400">{member.position} | {member.location}</p>
+              </div>
+              <button
+                onClick={() => removeMember(member.id)}
+                className="bg-red-500 text-white px-2 py-1 rounded"
+              >
+                ✕
+              </button>
+            </div>
           </li>
         ))}
       </ul>
 
-      {/* Add Member */}
-      <div className="mt-4 flex">
+      {/* Add Member Form */}
+      <div className="mt-4 space-y-2">
         <input
           type="text"
-          value={newMember}
-          onChange={(e) => setNewMember(e.target.value)}
-          className="flex-1 p-2 rounded bg-gray-800 text-white"
-          placeholder="Add member..."
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        />
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        />
+        <input
+          type="text"
+          placeholder="Position"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        />
+        <input
+          type="text"
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="w-full p-2 rounded bg-gray-800 text-white"
         />
         <button
           onClick={() => {
-            if (newMember.trim()) {
-              addMember(newMember.trim());
-              setNewMember("");
+            if (name.trim() && title.trim() && position.trim() && location.trim()) {
+              addMember({ name, title, position, location });
+              setName("");
+              setTitle("");
+              setPosition("");
+              setLocation("");
             }
           }}
-          className="ml-2 bg-blue-500 px-4 py-2 text-white rounded"
+          className="w-full bg-blue-500 px-4 py-2 text-white rounded"
         >
-          Add
+          Add Member
         </button>
       </div>
     </div>
