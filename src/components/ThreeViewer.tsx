@@ -3,13 +3,14 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, useCursor } from "@react-three/drei";
 import { Suspense, useState } from "react";
+import Logo from "@/components/Logo"; // Import Logo
 
 // Custom component to load and handle interactions with the drone model
 function DroneModel({ setHovered }: { setHovered: (value: boolean) => void }) {
-  const { scene } = useGLTF("/drone.glb"); // Loads from public/
+  const { scene } = useGLTF("/drone.glb");
   const [hovered, setLocalHovered] = useState(false);
 
-  useCursor(hovered); // Change cursor on hover
+  useCursor(hovered);
 
   return (
     <primitive
@@ -33,7 +34,10 @@ export default function ThreeViewer() {
 
   return (
     <div className="relative w-full h-full">
-      {/* Display message when hovering (moved OUTSIDE <Canvas>) */}
+      {/* Logo positioned in the top-left */}
+      <Logo />
+
+      {/* Hover message */}
       {hovered && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 bg-opacity-70 text-white px-4 py-2 rounded-lg">
           Click to open file folder
@@ -41,21 +45,18 @@ export default function ThreeViewer() {
       )}
 
       <Canvas camera={{ position: [5, 5, 5] }}>
-        {/* Lights */}
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
 
-        {/* 3D Model with Hover Effect */}
         <Suspense fallback={null}>
           <DroneModel setHovered={setHovered} />
         </Suspense>
 
-        {/* Controls */}
         <OrbitControls />
       </Canvas>
     </div>
   );
 }
 
-// Required for `useGLTF`
+// Preload model
 useGLTF.preload("/drone.glb");
